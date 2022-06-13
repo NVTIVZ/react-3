@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { getPlayers, getTeams } from "./fakeBackend/api";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Teams from "./pages/Teams";
+import Players from "./pages/Players";
 
 const App = () => {
-  const [data, setData] = useState();
-  console.log("data", data);
-  useEffect(() => {
-    getTeams(10)
-      .then((response) => setData(response))
-      .catch(console.error);
-  }, []);
-  return <div>Hello</div>;
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="teams" element={<Teams />} />
+      <Route path="players" element={<Players />} />
+    </Routes>
+  );
 };
 
 export default App;

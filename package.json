@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/NVTIVZ/react-1#readme",
   "dependencies": {
+    "faker": "^5.5.3",
     "ramda": "^0.28.0",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.18.5",

@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { getPlayers } from "../fakeBackend/api";
 import CardsGrid from "../components/CardsGrid";
 import { isEmpty, pipe, prop, sortBy } from "ramda";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Players = () => {
   const [data, setData] = useState([]);
@@ -19,9 +20,9 @@ const Players = () => {
   return (
     <Layout>
       <p className={"title"}>Players</p>
-      {isEmpty(data) && !error && <div className={"loading"}>Loading..</div>}
+      {isEmpty(data) && !error && <LoadingSpinner />}
       {!isEmpty(data) && <CardsGrid data={sortedData} paginationAmount={20} />}
-      {error && <div className={"error"}>Failed to load</div>}
+      {error && <div className={"error"}>Failed to load players</div>}
     </Layout>
   );
 };

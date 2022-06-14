@@ -10,7 +10,7 @@ const PaginationPanel = ({
     <div className="panel">
       <p className={"panel__title"}>Pagination</p>
       <div className={"panel__info"}>
-        {pagination / paginationAmount}/{dataLength / paginationAmount}{" "}
+        {pagination / paginationAmount}/{dataLength / paginationAmount}
       </div>
       <div className={"panel__buttons"}>
         <div className={"panel__button"}>

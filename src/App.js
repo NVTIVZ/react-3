@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { getPlayers, getTeams } from "./fakeBackend/api";
-import { Routes, Route } from "react-router-dom";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Teams from "./pages/Teams";
 import Players from "./pages/Players";
+import "./styles/global.css";
 
 const App = () => {
   return (

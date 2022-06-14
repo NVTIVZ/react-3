@@ -15,9 +15,9 @@ const generateRandomPlayers = (length) =>
 
 const generateRandomTeams = (length) =>
   Array.from({ length }, () => ({
-    teamName: faker.commerce.productName(),
-    playerNames: Array.from({ length: 6 }, () => faker.name.findName()),
-    description: faker.commerce.productDescription(),
+    name: faker.company.companyName(),
+    playerNames: Array.from({ length: 5 }, () => faker.name.findName()),
+    description: faker.lorem.sentences(),
   }));
 
 const delay = () =>

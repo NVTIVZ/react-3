@@ -1,8 +1,17 @@
 import React from "react";
 import "../styles/global.css";
+import styled from "styled-components";
 
 const Footer = () => {
-  return <footer className="footer">React-1</footer>;
+  return <FooterArea>React-2</FooterArea>;
 };
 
 export default Footer;
+
+const FooterArea = styled.footer`
+  display: flex;
+  justify-content: space-around;
+  background: #ef7f4d;
+  padding: 20px 0;
+  margin-top: auto;
+`;

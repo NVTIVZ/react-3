@@ -1,8 +1,9 @@
 import { add, multiply, pipe } from "ramda";
 import faker from "faker";
+import Future, { after, rejectAfter } from "fluture";
 
 const getRandomTimeout = () =>
-  pipe(multiply(2), add(1), multiply(1000))(Math.random());
+  pipe(multiply(2), add(1), multiply(1000), Math.floor)(Math.random());
 
 const getRandomScore = () => pipe(multiply(10), Math.floor)(Math.random());
 
@@ -20,22 +21,16 @@ const generateRandomTeams = (length) =>
     description: faker.lorem.sentences(),
   }));
 
-const delay = () =>
-  new Promise((resolve) => setTimeout(resolve, getRandomTimeout()));
-
-const getPromise = async (nameFn, resolveFn) => {
-  await delay();
-  return new Promise((resolve, reject) => {
-    if (getRandomScore() <= 2) {
-      reject(`${nameFn} network error`);
-    }
-    resolve(resolveFn);
-  });
+const getFuture = (nameFn, resolveFn) => {
+  if (getRandomScore() <= 2) {
+    return rejectAfter(getRandomTimeout())(`${nameFn} network error`);
+  }
+  return after(getRandomTimeout())(resolveFn);
 };
 
 const getPlayers = (players) =>
-  getPromise("getPlayers", generateRandomPlayers(players));
+  getFuture("getPlayers", generateRandomPlayers(players));
 
-const getTeams = (teams) => getPromise("getTeams", generateRandomTeams(teams));
+const getTeams = (teams) => getFuture("getTeams", generateRandomTeams(teams));
 
 export { getPlayers, getTeams };

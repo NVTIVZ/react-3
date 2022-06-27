@@ -1,26 +1,49 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { isEmpty, prop, sortBy } from "ramda";
+import { cond, equals, map, prop, sortBy } from "ramda";
 import { getTeams } from "../fakeBackend/api";
 import CardsGrid from "../components/CardsGrid";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { fork } from "fluture";
+import ErrorMessage from "../components/ErrorMessage";
+import styled from "styled-components";
 
 const Teams = () => {
   const [data, setData] = useState([]);
-  const [error, setError] = useState();
-  const sortedData = useMemo(() => sortBy(prop("name"))(data), [data]);
+  const [status, setStatus] = useState("LOADING");
+
+  const handleGetTeams = useCallback(() => {
+    setStatus("LOADING");
+    getTeams(2000)
+      |> map((x) => x |> sortBy(prop("name")))
+      |> fork(() => setStatus("ERROR"))((res) => {
+        setData(res);
+        setStatus("SUCCESS");
+      });
+  }, []);
 
   useEffect(() => {
-    getTeams(2000).then(setData).catch(setError);
+    handleGetTeams();
   }, []);
+
   return (
     <Layout>
-      <p className={"title"}>Teams</p>
-      {isEmpty(data) && !error && <LoadingSpinner />}
-      {!isEmpty(data) && <CardsGrid data={sortedData} paginationAmount={10} />}
-      {error && <div className={"error"}>Failed to load teams</div>}
+      <Title>Teams</Title>
+      {cond([
+        [equals("ERROR"), () => <ErrorMessage refresh={handleGetTeams} />],
+        [equals("LOADING"), () => <LoadingSpinner />],
+        [
+          equals("SUCCESS"),
+          () => <CardsGrid data={data} paginationAmount={10} />,
+        ],
+      ])(status)}
     </Layout>
   );
 };
 
 export default Teams;
+
+const Title = styled.p`
+  margin: 15px auto;
+  font-size: 30px;
+`;

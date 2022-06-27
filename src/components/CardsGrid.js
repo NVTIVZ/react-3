@@ -5,20 +5,21 @@ import "../styles/global.css";
 import DetailsModal from "./DetailsModal";
 import { length } from "ramda";
 import { useLocation } from "react-router-dom";
+import styled from "styled-components";
 
-const CardsGrid = ({ data, paginationAmount }) => {
+const CardsGrid = ({ data, paginationAmount, status }) => {
   const [pagination, setPagination] = useState(paginationAmount);
   const [modal, setModal] = useState();
-  const dataLength = useMemo(() => length(data), [data]);
+  const numberOfCards = data |> length;
   const { pathname } = useLocation();
   return (
     <>
-      <div className={"grid"}>
+      <Grid>
         <PaginationPanel
           pagination={pagination}
           setPagination={setPagination}
           paginationAmount={paginationAmount}
-          dataLength={dataLength}
+          numberOfCards={numberOfCards}
         />
         {data.map(
           ({ name, surname = "", description, playerNames = [] }, index) => {
@@ -36,10 +37,21 @@ const CardsGrid = ({ data, paginationAmount }) => {
             }
           }
         )}
-      </div>
+      </Grid>
       {modal && <DetailsModal setModal={setModal} modal={modal} />}
     </>
   );
 };
 
 export default CardsGrid;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin: 25px 15vw;
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: 25px 15vw;
+  }
+`;

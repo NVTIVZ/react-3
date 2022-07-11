@@ -1,21 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { getPlayers } from "../fakeBackend/api";
 import CardsGrid from "../components/CardsGrid";
-import { andThen, cond, equals, isEmpty, map, prop, sortBy } from "ramda";
+import { cond, equals, map, prop } from "ramda";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { fork } from "fluture";
 import styled from "styled-components";
 import ErrorMessage from "../components/ErrorMessage";
+import testCall from "../api/qqlCalls/testCall";
 
-const Players = () => {
+const Pokemons = () => {
   const [data, setData] = useState([]);
   const [status, setStatus] = useState("LOADING");
 
   const handleGetPlayers = useCallback(() => {
     setStatus("LOADING");
-    getPlayers(2000)
-      |> map((x) => x |> sortBy(prop("name")) |> sortBy(prop("surname")))
+    testCall({ limit: 40 })
+      |> map((res) => prop("data")(res))
+      |> map((data) => prop("pokemon_v2_pokemon")(data))
       |> fork(() => setStatus("ERROR"))((res) => {
         setData(res);
         setStatus("SUCCESS");
@@ -41,7 +42,7 @@ const Players = () => {
   );
 };
 
-export default Players;
+export default Pokemons;
 
 const Title = styled.p`
   margin: 15px auto;

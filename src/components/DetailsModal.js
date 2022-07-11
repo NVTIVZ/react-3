@@ -3,25 +3,26 @@ import "../styles/global.css";
 import { isEmpty } from "ramda";
 import styled from "styled-components";
 import Button from "./Button";
+import { Link, useLocation, useParams } from "react-router-dom";
 
-const DetailsModal = ({ modal, setModal }) => {
-  const { name, description, players, pathname } = modal;
+const DetailsModal = () => {
+  const { id } = useParams();
+
   return (
     <Background>
       <Modal>
-        <Image src={`.${pathname}.svg`} alt={"image"} />
+        <Image src={`./players.svg`} alt={"image"} />
         <Content>
           <Title>Name:</Title>
-          <Text>{name}</Text>
+          <Text>{}</Text>
           <Title>Description:</Title>
-          <Text>{description}</Text>
-          <Title>{!isEmpty(players) && "Players:"}</Title>
-          <List>
-            {!isEmpty(players) &&
-              players.map((player) => <Player key={player}>{player}</Player>)}
-          </List>
+          <Text></Text>
+          <Title></Title>
+          <List></List>
         </Content>
-        <ModalButton onClick={() => setModal()}>X</ModalButton>
+        <Link to={"/pokemons"}>
+          <ModalButton>X</ModalButton>
+        </Link>
       </Modal>
     </Background>
   );
@@ -32,7 +33,6 @@ export default DetailsModal;
 const Background = styled.div`
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
   display: flex;
   position: fixed;
   z-index: 999;

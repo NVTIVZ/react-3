@@ -2,20 +2,21 @@ import React from "react";
 import "../styles/global.css";
 import styled from "styled-components";
 import Button from "./Button";
+import { Link } from "react-router-dom";
 
-const Card = ({ name, description, setModal, players, pathname }) => {
+const Card = ({ id, name, setModal, type }) => {
   return (
     <Item>
-      <CardContainer>
-        <Image src={`.${pathname}.svg`} alt={"avatar"} />
+      <CardContainer type={type[0].pokemon_v2_type.name}>
+        <Image
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
+          alt={"avatar"}
+        />
         <Content>
           <Title>{name}</Title>
-          <Description>{description}</Description>
-          <Button
-            onClick={() => setModal({ name, description, players, pathname })}
-          >
-            Details
-          </Button>
+          <Link to={`/pokemons/${id}`}>
+            <Button>Details</Button>
+          </Link>
         </Content>
       </CardContainer>
     </Item>
@@ -34,14 +35,15 @@ const Item = styled.div`
 const CardContainer = styled.div`
   width: 250px;
   height: 300px;
-  background: #ef7f4d;
+  background: ${({ theme, type }) => theme[type]};
   border-radius: 5px;
   display: flex;
   flex-direction: column;
+  align-items: center;
 `;
 
 const Image = styled.img`
-  height: 120px;
+  height: 180px;
   margin: auto;
 `;
 
@@ -51,7 +53,7 @@ const Content = styled.div`
 `;
 const Title = styled.p`
   margin: 3px auto;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 500;
 `;
 const Description = styled.p`

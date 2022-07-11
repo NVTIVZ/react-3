@@ -1,24 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../components/Layout";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import testCall from "../api/qqlCalls/testCall";
+import { chain, encase, encaseP, fork } from "fluture";
+import { invoker, map, prop } from "ramda";
 
-const Home = () => (
-  <Layout>
-    <Container>
-      <PlayersSide>
-        <Link to={"/players"}>
-          <Mask>Go to players</Mask>
-        </Link>
-      </PlayersSide>
-      <TeamsSide>
-        <Link to={"/teams"}>
-          <Mask>Go to Teams</Mask>
-        </Link>
-      </TeamsSide>
-    </Container>
-  </Layout>
-);
+const Home = () => {
+  useEffect(() => {
+    testCall({ limit: 10 })
+      |> map((res) => prop("data")(res))
+      |> map((data) => prop("pokemon_v2_pokemon")(data))
+      |> fork(console.error)(console.log);
+  }, []);
+  return (
+    <Layout>
+      <Container>
+        <PlayersSide>
+          <Link to={"/players"}>
+            <Mask>Go to players</Mask>
+          </Link>
+        </PlayersSide>
+        <TeamsSide>
+          <Link to={"/teams"}>
+            <Mask>Go to Teams</Mask>
+          </Link>
+        </TeamsSide>
+      </Container>
+    </Layout>
+  );
+};
 
 export default Home;
 

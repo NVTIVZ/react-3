@@ -21,6 +21,7 @@
   "dependencies": {
     "faker": "^5.5.3",
     "fluture": "^14.0.0",
+    "graphql-tag": "^2.12.6",
     "ramda": "^0.28.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

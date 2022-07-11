@@ -9,7 +9,6 @@ import styled from "styled-components";
 
 const CardsGrid = ({ data, paginationAmount, status }) => {
   const [pagination, setPagination] = useState(paginationAmount);
-  const [modal, setModal] = useState();
   const numberOfCards = data |> length;
   const { pathname } = useLocation();
   return (
@@ -21,24 +20,20 @@ const CardsGrid = ({ data, paginationAmount, status }) => {
           paginationAmount={paginationAmount}
           numberOfCards={numberOfCards}
         />
-        {data.map(
-          ({ name, surname = "", description, playerNames = [] }, index) => {
-            if (index <= pagination && index > pagination - paginationAmount) {
-              return (
-                <Card
-                  key={index}
-                  name={`${name} ${surname}`}
-                  description={description}
-                  setModal={setModal}
-                  players={playerNames}
-                  pathname={pathname}
-                />
-              );
-            }
+        {data.map(({ name, id, pokemon_v2_pokemontypes }) => {
+          if (id <= pagination && id > pagination - paginationAmount) {
+            return (
+              <Card
+                key={id}
+                id={id}
+                type={pokemon_v2_pokemontypes}
+                name={name}
+                pathname={pathname}
+              />
+            );
           }
-        )}
+        })}
       </Grid>
-      {modal && <DetailsModal setModal={setModal} modal={modal} />}
     </>
   );
 };

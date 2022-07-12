@@ -1,7 +1,7 @@
 import { FutureRequest } from "../apiHelpers";
 import gql from "graphql-tag";
 
-const testCall = ({ limit }) =>
+const pokemonsCall = ({ limit }) =>
   FutureRequest(
     gql`
       query pokemons($limit: Int!) {
@@ -19,4 +19,4 @@ const testCall = ({ limit }) =>
     { limit }
   );
 
-export default testCall;
+export default pokemonsCall;

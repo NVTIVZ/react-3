@@ -8,8 +8,8 @@ const NavBar = () => {
       <Logo>React-2</Logo>
       <Menu>
         <Link to="/">Home</Link>
-        <Link to="/players">Players</Link>
-        <Link to="/teams">Teams</Link>
+        <Link to="/pokemons">Pokemons</Link>
+        <Link to="/types">Types</Link>
       </Menu>
     </Header>
   );

@@ -3,7 +3,7 @@ import PaginationPanel from "./PaginationPanel";
 import Card from "./Card";
 import "../styles/global.css";
 import DetailsModal from "./DetailsModal";
-import { length } from "ramda";
+import { length, map } from "ramda";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 
@@ -11,6 +11,7 @@ const CardsGrid = ({ data, paginationAmount, status }) => {
   const [pagination, setPagination] = useState(paginationAmount);
   const numberOfCards = data |> length;
   const { pathname } = useLocation();
+
   return (
     <>
       <Grid>
@@ -20,19 +21,20 @@ const CardsGrid = ({ data, paginationAmount, status }) => {
           paginationAmount={paginationAmount}
           numberOfCards={numberOfCards}
         />
-        {data.map(({ name, id, pokemon_v2_pokemontypes }) => {
-          if (id <= pagination && id > pagination - paginationAmount) {
-            return (
-              <Card
-                key={id}
-                id={id}
-                type={pokemon_v2_pokemontypes}
-                name={name}
-                pathname={pathname}
-              />
-            );
-          }
-        })}
+        {data
+          |> map(({ name, id, type }) => {
+            if (id <= pagination && id > pagination - paginationAmount) {
+              return (
+                <Card
+                  key={id}
+                  id={id}
+                  type={type}
+                  name={name}
+                  pathname={pathname}
+                />
+              );
+            }
+          })}
       </Grid>
     </>
   );

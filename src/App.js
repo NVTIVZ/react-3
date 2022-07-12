@@ -1,11 +1,12 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Teams from "./pages/Teams";
+import Types from "./pages/Types";
 import Pokemons from "./pages/Pokemons";
 import "./styles/global.css";
 import { ThemeProvider } from "styled-components";
 import DetailsModal from "./components/DetailsModal";
+import PokemonDetail from "./pages/PokemonDetail";
 
 const theme = {
   grass: "rgba(0, 171, 20,0.2)",
@@ -34,10 +35,13 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/teams" element={<Teams />} />
+        <Route path="/types">
+          <Route path="" element={<Types />} />
+          <Route path=":modalId" element={<DetailsModal />} />
+        </Route>
         <Route path="/pokemons">
           <Route path="" element={<Pokemons />} />
-          <Route path=":id" element={<DetailsModal />} />
+          <Route path=":modalId" element={<PokemonDetail />} />
         </Route>
       </Routes>
     </ThemeProvider>

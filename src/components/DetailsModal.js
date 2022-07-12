@@ -1,28 +1,54 @@
 import React from "react";
 import "../styles/global.css";
-import { isEmpty } from "ramda";
+import { equals, isEmpty, map, prop } from "ramda";
 import styled from "styled-components";
 import Button from "./Button";
 import { Link, useLocation, useParams } from "react-router-dom";
+import LoadingSpinner from "./LoadingSpinner";
 
-const DetailsModal = () => {
-  const { id } = useParams();
-
+const DetailsModal = ({ data, variant, status }) => {
+  const { name, id, height, weight, base_experience, pokemon_v2_pokemonstats } =
+    data;
   return (
     <Background>
       <Modal>
-        <Image src={`./players.svg`} alt={"image"} />
-        <Content>
-          <Title>Name:</Title>
-          <Text>{}</Text>
-          <Title>Description:</Title>
-          <Text></Text>
-          <Title></Title>
-          <List></List>
-        </Content>
-        <Link to={"/pokemons"}>
-          <ModalButton>X</ModalButton>
-        </Link>
+        {equals("LOADING", status) ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <>
+              {variant === "pokemon" ? (
+                <Image
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
+                  alt={"avatar"}
+                />
+              ) : (
+                "Placeholder"
+              )}
+            </>
+
+            <Content>
+              <Title>Name: {name}</Title>
+              <Title>Height: {height}</Title>
+              <Title>Weight: {weight}</Title>
+              <Title>Base Experience: {base_experience}</Title>
+              <Title>Stats:</Title>
+              <List>
+                {pokemon_v2_pokemonstats.map(
+                  ({ base_stat, pokemon_v2_stat }, index) => (
+                    <ListItem key={index}>
+                      {" "}
+                      {pokemon_v2_stat |> prop("name")}: {base_stat}
+                    </ListItem>
+                  )
+                )}
+              </List>
+            </Content>
+            <Link to={`/${variant}s`}>
+              <ModalButton>X</ModalButton>
+            </Link>
+          </>
+        )}
       </Modal>
     </Background>
   );
@@ -40,7 +66,7 @@ const Background = styled.div`
 
 const Modal = styled.div`
   margin: auto;
-  background: #ef7f4d;
+  background: lightblue;
   width: 700px;
   height: 500px;
   display: flex;
@@ -70,7 +96,7 @@ const Text = styled.p`
 const List = styled.ul`
   list-style: none;
 `;
-const Player = styled.li`
+const ListItem = styled.li`
   margin: 3px 10px;
 `;
 

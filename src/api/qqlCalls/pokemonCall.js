@@ -9,6 +9,15 @@ const PokemonCall = (id) =>
         pokemon_v2_pokemon_by_pk(id: $id) {
           name
           id
+          height
+          base_experience
+          weight
+          pokemon_v2_pokemonstats {
+            pokemon_v2_stat {
+              name
+            }
+            base_stat
+          }
         }
       }
     `,

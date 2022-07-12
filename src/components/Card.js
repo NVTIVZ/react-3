@@ -4,17 +4,17 @@ import styled from "styled-components";
 import Button from "./Button";
 import { Link } from "react-router-dom";
 
-const Card = ({ id, name, setModal, type }) => {
+const Card = ({ id, name, pathname, type }) => {
   return (
     <Item>
-      <CardContainer type={type[0].pokemon_v2_type.name}>
+      <CardContainer type={type}>
         <Image
           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
           alt={"avatar"}
         />
         <Content>
           <Title>{name}</Title>
-          <Link to={`/pokemons/${id}`}>
+          <Link to={`${pathname}/${id}`}>
             <Button>Details</Button>
           </Link>
         </Content>

@@ -13,7 +13,8 @@ const PaginationPanel = ({
     <Panel>
       <Title>Pagination</Title>
       <Info>
-        {pagination / paginationAmount}/{numberOfCards / paginationAmount}
+        {pagination / paginationAmount}/
+        {numberOfCards / paginationAmount |> Math.ceil}
       </Info>
       <ButtonsContainer>
         <ButtonContainer>
@@ -26,7 +27,10 @@ const PaginationPanel = ({
           )}
         </ButtonContainer>
         <ButtonContainer>
-          {!(pagination === numberOfCards) && (
+          {!(
+            pagination / paginationAmount ===
+            Math.ceil(numberOfCards / paginationAmount)
+          ) && (
             <Button
               onClick={() => setPagination(pagination + paginationAmount)}
             >

@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import CardsGrid from "../components/CardsGrid";
-import { cond, equals, map, prop } from "ramda";
+import { cond, equals, head, indexOf, map, path, prop } from "ramda";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { fork } from "fluture";
 import styled from "styled-components";
 import ErrorMessage from "../components/ErrorMessage";
-import testCall from "../api/qqlCalls/testCall";
+import pokemonsCall from "../api/qqlCalls/pokemonsCall";
 
 const Pokemons = () => {
   const [data, setData] = useState([]);
@@ -14,14 +14,29 @@ const Pokemons = () => {
 
   const handleGetPlayers = useCallback(() => {
     setStatus("LOADING");
-    testCall({ limit: 40 })
-      |> map((res) => prop("data")(res))
-      |> map((data) => prop("pokemon_v2_pokemon")(data))
+    pokemonsCall({ limit: 151 })
+      |> map(path(["data", "pokemon_v2_pokemon"]))
+      |> map(
+        (list) =>
+          list
+          |> map(({ id, name, pokemon_v2_pokemontypes }) => {
+            return {
+              id,
+              name,
+              type:
+                pokemon_v2_pokemontypes
+                |> head
+                |> path(["pokemon_v2_type", "name"]),
+            };
+          })
+      )
       |> fork(() => setStatus("ERROR"))((res) => {
         setData(res);
         setStatus("SUCCESS");
       });
   }, []);
+
+  console.log(data);
 
   useEffect(() => {
     handleGetPlayers();
@@ -29,7 +44,7 @@ const Pokemons = () => {
 
   return (
     <Layout>
-      <Title>Players</Title>
+      <Title>Pokemons</Title>
       {cond([
         [equals("ERROR"), () => <ErrorMessage refresh={handleGetPlayers} />],
         [equals("LOADING"), () => <LoadingSpinner />],

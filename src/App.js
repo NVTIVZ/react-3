@@ -5,8 +5,8 @@ import Types from "./pages/Types";
 import Pokemons from "./pages/Pokemons";
 import "./styles/global.css";
 import { ThemeProvider } from "styled-components";
-import DetailsModal from "./components/DetailsModal";
 import PokemonDetail from "./pages/PokemonDetail";
+import TypeDetail from "./pages/typeDetail";
 
 const theme = {
   grass: "rgba(0, 171, 20,0.2)",
@@ -37,7 +37,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/types">
           <Route path="" element={<Types />} />
-          <Route path=":modalId" element={<DetailsModal />} />
+          <Route path=":modalId" element={<TypeDetail />} />
         </Route>
         <Route path="/pokemons">
           <Route path="" element={<Pokemons />} />

@@ -1,41 +1,71 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PaginationPanel from "./PaginationPanel";
 import Card from "./Card";
 import "../styles/global.css";
-import DetailsModal from "./DetailsModal";
-import { length, map } from "ramda";
-import { useLocation } from "react-router-dom";
+import { cond, equals, map } from "ramda";
 import styled from "styled-components";
+import { fork } from "fluture";
+import ErrorMessage from "./ErrorMessage";
+import LoadingSpinner from "./LoadingSpinner";
 
-const CardsGrid = ({ data, paginationAmount, status }) => {
+const CardsGrid = ({ paginationAmount, handleCall, handleCount, variant }) => {
   const [pagination, setPagination] = useState(paginationAmount);
-  const numberOfCards = data |> length;
-  const { pathname } = useLocation();
+  const [data, setData] = useState([]);
+  const [status, setStatus] = useState("LOADING");
+  const [numberOfCards, setNumberOfCards] = useState(0);
 
+  const consumeHandleCall = useCallback(() => {
+    handleCall()
+      |> fork(() => setStatus("ERROR"))((res) => {
+        setData(res);
+        setStatus("SUCCESS");
+      });
+  }, [handleCall]);
+
+  const consumeHandleCount = useCallback(() => {
+    handleCount()
+      |> fork(() => setStatus("ERROR"))((res) => {
+        setNumberOfCards(res);
+      });
+  }, [handleCount]);
+
+  useEffect(() => {
+    consumeHandleCall();
+    consumeHandleCount();
+  }, []);
   return (
     <>
-      <Grid>
-        <PaginationPanel
-          pagination={pagination}
-          setPagination={setPagination}
-          paginationAmount={paginationAmount}
-          numberOfCards={numberOfCards}
-        />
-        {data
-          |> map(({ name, id, type }) => {
-            if (id <= pagination && id > pagination - paginationAmount) {
-              return (
-                <Card
-                  key={id}
-                  id={id}
-                  type={type}
-                  name={name}
-                  pathname={pathname}
-                />
-              );
-            }
-          })}
-      </Grid>
+      {cond([
+        [equals("ERROR"), () => <ErrorMessage refresh={consumeHandleCall} />],
+        [equals("LOADING"), () => <LoadingSpinner />],
+        [
+          equals("SUCCESS"),
+          () => (
+            <Grid>
+              <PaginationPanel
+                pagination={pagination}
+                setPagination={setPagination}
+                paginationAmount={paginationAmount}
+                numberOfCards={numberOfCards}
+              />
+              {data
+                |> map(({ name, id, type }) => {
+                  if (id <= pagination && id > pagination - paginationAmount) {
+                    return (
+                      <Card
+                        key={id}
+                        id={id}
+                        type={type}
+                        name={name}
+                        variant={variant}
+                      />
+                    );
+                  }
+                })}
+            </Grid>
+          ),
+        ],
+      ])(status)}
     </>
   );
 };

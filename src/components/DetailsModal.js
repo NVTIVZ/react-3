@@ -1,54 +1,100 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "../styles/global.css";
-import { equals, isEmpty, map, prop } from "ramda";
+import { cond, equals, prop } from "ramda";
 import styled from "styled-components";
-import Button from "./Button";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
+import mapWithKey from "../utils/mapWithKey";
+import ErrorMessage from "./ErrorMessage";
+import { fork } from "fluture";
 
-const DetailsModal = ({ data, variant, status }) => {
+const PokemonView = ({ data }) => {
   const { name, id, height, weight, base_experience, pokemon_v2_pokemonstats } =
     data;
   return (
+    <>
+      <Image
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
+        alt={"avatar"}
+      />
+      <Content>
+        <Title>Name: {name}</Title>
+        <Title>Height: {height}</Title>
+        <Title>Weight: {weight}</Title>
+        <Title>Base Experience: {base_experience}</Title>
+        <Title>Stats:</Title>
+        <List>
+          {pokemon_v2_pokemonstats
+            |> mapWithKey(({ base_stat, pokemon_v2_stat }, index) => (
+              <ListItem key={index}>
+                {pokemon_v2_stat |> prop("name")}: {base_stat}
+              </ListItem>
+            ))}
+        </List>
+      </Content>
+    </>
+  );
+};
+
+const TypeView = ({ data }) => {
+  const { name, pokemon_v2_pokemontypes } = data;
+
+  return (
+    <>
+      <Placeholder>Placeholder</Placeholder>
+      <Content>
+        <Title>Name: {name}</Title>
+        <Title>Pokemons:</Title>
+        <PokemonList>
+          {pokemon_v2_pokemontypes
+            |> mapWithKey(({ pokemon_v2_pokemon }, index) => (
+              <ListItem key={index}>
+                {pokemon_v2_pokemon |> prop("name")}
+              </ListItem>
+            ))}
+        </PokemonList>
+      </Content>
+    </>
+  );
+};
+
+const DetailsModal = ({ variant, handleCall }) => {
+  const [data, setData] = useState([]);
+  const [status, setStatus] = useState("LOADING");
+  const consumeHandleCall = useCallback(() => {
+    setStatus("LOADING");
+    handleCall()
+      |> fork(() => setStatus("ERROR"))((res) => {
+        setData(res);
+        setStatus("SUCCESS");
+      });
+  }, [handleCall]);
+  useEffect(() => {
+    consumeHandleCall();
+  }, []);
+  return (
     <Background>
       <Modal>
-        {equals("LOADING", status) ? (
-          <LoadingSpinner />
-        ) : (
-          <>
-            <>
-              {variant === "pokemon" ? (
-                <Image
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
-                  alt={"avatar"}
-                />
-              ) : (
-                "Placeholder"
-              )}
-            </>
-
-            <Content>
-              <Title>Name: {name}</Title>
-              <Title>Height: {height}</Title>
-              <Title>Weight: {weight}</Title>
-              <Title>Base Experience: {base_experience}</Title>
-              <Title>Stats:</Title>
-              <List>
-                {pokemon_v2_pokemonstats.map(
-                  ({ base_stat, pokemon_v2_stat }, index) => (
-                    <ListItem key={index}>
-                      {" "}
-                      {pokemon_v2_stat |> prop("name")}: {base_stat}
-                    </ListItem>
-                  )
-                )}
-              </List>
-            </Content>
-            <Link to={`/${variant}s`}>
-              <ModalButton>X</ModalButton>
-            </Link>
-          </>
-        )}
+        {status
+          |> cond([
+            [equals("LOADING"), () => <LoadingSpinner />],
+            [
+              equals("SUCCESS"),
+              () => (
+                <>
+                  {variant
+                    |> cond([
+                      [equals("pokemon"), () => <PokemonView data={data} />],
+                      [equals("type"), () => <TypeView data={data} />],
+                    ])}
+                  <Link to={`/${variant}s`}>
+                    <ModalButton>X</ModalButton>
+                  </Link>
+                </>
+              ),
+            ],
+            [equals("ERROR"), () => <ErrorMessage />],
+          ])}
       </Modal>
     </Background>
   );
@@ -81,6 +127,7 @@ const Image = styled.img`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 `;
 
 const Title = styled.p`
@@ -92,10 +139,14 @@ const Title = styled.p`
 const Text = styled.p`
   margin: 3px 10px;
 `;
-
 const List = styled.ul`
   list-style: none;
 `;
+const PokemonList = styled.ul`
+  list-style: none;
+  overflow-y: scroll;
+`;
+
 const ListItem = styled.li`
   margin: 3px 10px;
 `;
@@ -113,4 +164,14 @@ const ModalButton = styled.button`
   &:hover {
     background: rgba(0, 0, 0, 0.15);
   }
+`;
+
+const Placeholder = styled.div`
+  background: white;
+  height: 300px;
+  width: 200px;
+  margin: auto 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

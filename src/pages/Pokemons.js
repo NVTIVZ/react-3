@@ -1,20 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import Layout from "../components/Layout";
 import CardsGrid from "../components/CardsGrid";
-import { cond, equals, head, indexOf, map, path, prop } from "ramda";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { fork } from "fluture";
+import { head, map, path } from "ramda";
 import styled from "styled-components";
-import ErrorMessage from "../components/ErrorMessage";
 import pokemonsCall from "../api/qqlCalls/pokemonsCall";
+import pokemonsCount from "../api/qqlCalls/pokemonsCount";
 
 const Pokemons = () => {
-  const [data, setData] = useState([]);
-  const [status, setStatus] = useState("LOADING");
-
-  const handleGetPlayers = useCallback(() => {
-    setStatus("LOADING");
-    pokemonsCall({ limit: 151 })
+  const handleGetPlayers = useCallback(
+    () =>
+      pokemonsCall()
       |> map(path(["data", "pokemon_v2_pokemon"]))
       |> map(
         (list) =>
@@ -29,30 +24,28 @@ const Pokemons = () => {
                 |> path(["pokemon_v2_type", "name"]),
             };
           })
-      )
-      |> fork(() => setStatus("ERROR"))((res) => {
-        setData(res);
-        setStatus("SUCCESS");
-      });
-  }, []);
+      ),
+    []
+  );
 
-  console.log(data);
-
-  useEffect(() => {
-    handleGetPlayers();
-  }, []);
+  const handleGetCount = useCallback(
+    () =>
+      pokemonsCount()
+      |> map(
+        path(["data", "pokemon_v2_pokemon_aggregate", "aggregate", "count"])
+      ),
+    []
+  );
 
   return (
     <Layout>
       <Title>Pokemons</Title>
-      {cond([
-        [equals("ERROR"), () => <ErrorMessage refresh={handleGetPlayers} />],
-        [equals("LOADING"), () => <LoadingSpinner />],
-        [
-          equals("SUCCESS"),
-          () => <CardsGrid data={data} paginationAmount={20} />,
-        ],
-      ])(status)}
+      <CardsGrid
+        variant={"pokemon"}
+        handleCall={handleGetPlayers}
+        handleCount={handleGetCount}
+        paginationAmount={20}
+      />
     </Layout>
   );
 };

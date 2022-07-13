@@ -1,21 +1,16 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import Layout from "../components/Layout";
-import { cond, equals, map, path, prop, sortBy } from "ramda";
+import { map, path } from "ramda";
 import CardsGrid from "../components/CardsGrid";
-import LoadingSpinner from "../components/LoadingSpinner";
-import { fork } from "fluture";
-import ErrorMessage from "../components/ErrorMessage";
 import styled from "styled-components";
 
 import typesCall from "../api/qqlCalls/typesCall";
+import typesCount from "../api/qqlCalls/typesCount";
 
 const Types = () => {
-  const [data, setData] = useState([]);
-  const [status, setStatus] = useState("LOADING");
-
-  const handleGetTypes = useCallback(() => {
-    setStatus("LOADING");
-    typesCall()
+  const handleGetTypes = useCallback(
+    () =>
+      typesCall()
       |> map(path(["data", "pokemon_v2_type"]))
       |> map(
         (list) =>
@@ -25,28 +20,26 @@ const Types = () => {
             name,
             type: name,
           }))
-      )
-      |> fork(() => setStatus("ERROR"))((res) => {
-        setData(res);
-        setStatus("SUCCESS");
-      });
-  }, []);
-  console.log(data);
-  useEffect(() => {
-    handleGetTypes();
-  }, []);
+      ),
+    []
+  );
+
+  const handleGetCount = useCallback(
+    () =>
+      typesCount()
+      |> map(path(["data", "pokemon_v2_type_aggregate", "aggregate", "count"])),
+    []
+  );
 
   return (
     <Layout>
       <Title>Teams</Title>
-      {cond([
-        [equals("ERROR"), () => <ErrorMessage refresh={handleGetTypes} />],
-        [equals("LOADING"), () => <LoadingSpinner />],
-        [
-          equals("SUCCESS"),
-          () => <CardsGrid data={data} paginationAmount={10} />,
-        ],
-      ])(status)}
+      <CardsGrid
+        variant={"type"}
+        handleCall={handleGetTypes}
+        paginationAmount={10}
+        handleCount={handleGetCount}
+      />
     </Layout>
   );
 };

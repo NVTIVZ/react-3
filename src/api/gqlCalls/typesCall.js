@@ -1,16 +1,17 @@
 import { FutureRequest } from "../apiHelpers";
 import gql from "graphql-tag";
 
-const typesCall = () =>
+const typesCall = (limit, offset) =>
   FutureRequest(
     gql`
-      query types {
-        pokemon_v2_type {
+      query types($limit: Int!, $offset: Int!) {
+        pokemon_v2_type(limit: $limit, offset: $offset) {
           name
           id
         }
       }
-    `
+    `,
+    { limit, offset }
   );
 
 export default typesCall;

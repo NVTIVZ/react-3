@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import "../styles/global.css";
 import { cond, equals, prop } from "ramda";
 import styled from "styled-components";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
 import mapWithKey from "../utils/mapWithKey";
 import ErrorMessage from "./ErrorMessage";
@@ -112,7 +111,7 @@ const Background = styled.div`
 
 const Modal = styled.div`
   margin: auto;
-  background: lightblue;
+  background: ${({ theme }) => theme.main};
   width: 700px;
   height: 500px;
   display: flex;

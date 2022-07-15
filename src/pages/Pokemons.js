@@ -3,13 +3,13 @@ import Layout from "../components/Layout";
 import CardsGrid from "../components/CardsGrid";
 import { head, map, path } from "ramda";
 import styled from "styled-components";
-import pokemonsCall from "../api/qqlCalls/pokemonsCall";
-import pokemonsCount from "../api/qqlCalls/pokemonsCount";
+import pokemonsCall from "../api/gqlCalls/pokemonsCall";
+import pokemonsCount from "../api/gqlCalls/pokemonsCount";
 
 const Pokemons = () => {
   const handleGetPlayers = useCallback(
-    () =>
-      pokemonsCall()
+    (limit, offset) =>
+      pokemonsCall(limit, offset)
       |> map(path(["data", "pokemon_v2_pokemon"]))
       |> map(
         (list) =>

@@ -4,13 +4,13 @@ import { map, path } from "ramda";
 import CardsGrid from "../components/CardsGrid";
 import styled from "styled-components";
 
-import typesCall from "../api/qqlCalls/typesCall";
-import typesCount from "../api/qqlCalls/typesCount";
+import typesCall from "../api/gqlCalls/typesCall";
+import typesCount from "../api/gqlCalls/typesCount";
 
 const Types = () => {
   const handleGetTypes = useCallback(
-    () =>
-      typesCall()
+    (limit, offset) =>
+      typesCall(limit, offset)
       |> map(path(["data", "pokemon_v2_type"]))
       |> map(
         (list) =>
@@ -33,7 +33,7 @@ const Types = () => {
 
   return (
     <Layout>
-      <Title>Teams</Title>
+      <Title>Types</Title>
       <CardsGrid
         variant={"type"}
         handleCall={handleGetTypes}

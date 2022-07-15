@@ -1,5 +1,4 @@
 import React from "react";
-import "../styles/global.css";
 import Button from "./Button";
 import styled from "styled-components";
 
@@ -13,12 +12,12 @@ const PaginationPanel = ({
     <Panel>
       <Title>Pagination</Title>
       <Info>
-        {pagination / paginationAmount}/
+        {(pagination + paginationAmount) / paginationAmount}/
         {numberOfCards / paginationAmount |> Math.ceil}
       </Info>
       <ButtonsContainer>
         <ButtonContainer>
-          {!(pagination === paginationAmount) && (
+          {!(pagination + paginationAmount === paginationAmount) && (
             <Button
               onClick={() => setPagination(pagination - paginationAmount)}
             >
@@ -28,7 +27,7 @@ const PaginationPanel = ({
         </ButtonContainer>
         <ButtonContainer>
           {!(
-            pagination / paginationAmount ===
+            (pagination + paginationAmount) / paginationAmount ===
             Math.ceil(numberOfCards / paginationAmount)
           ) && (
             <Button
@@ -50,11 +49,12 @@ const Panel = styled.div`
   flex-direction: column;
   position: fixed;
   left: 25px;
+  top: 100px;
   height: 110px;
   border-radius: 5px;
   border: 2px solid black;
 
-  background: #ef7f4d;
+  background: ${({ theme }) => theme.main};
   width: 260px;
   z-index: 99;
 `;

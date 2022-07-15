@@ -1,20 +1,27 @@
 import React from "react";
-import "../styles/global.css";
 import styled from "styled-components";
 import Button from "./Button";
 import { Link } from "react-router-dom";
+import { cond, equals, ifElse } from "ramda";
 
-const Card = ({ id, name, pathname, type }) => {
+const Card = ({ id, name, variant, type }) => {
   return (
     <Item>
       <CardContainer type={type}>
-        <Image
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
-          alt={"avatar"}
-        />
+        {variant
+          |> ifElse(
+            equals("pokemon"),
+            () => (
+              <Image
+                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`}
+                alt={"avatar"}
+              />
+            ),
+            () => <Placeholder>Placeholder</Placeholder>
+          )}
         <Content>
           <Title>{name}</Title>
-          <Link to={`${pathname}/${id}`}>
+          <Link to={`/${variant}s/${id}`}>
             <Button>Details</Button>
           </Link>
         </Content>
@@ -56,8 +63,13 @@ const Title = styled.p`
   font-size: 24px;
   font-weight: 500;
 `;
-const Description = styled.p`
-  margin: 5px 10px 10px 10px;
-  height: 55px;
-  overflow: hidden;
+
+const Placeholder = styled.div`
+  background: white;
+  height: 150px;
+  width: 200px;
+  margin: auto 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

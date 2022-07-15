@@ -1,15 +1,14 @@
 import React from "react";
-import "../styles/global.css";
 import styled, { keyframes } from "styled-components";
 
 const LoadingSpinner = () => {
   return (
     <Container>
       <Ring>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+        <RingItem></RingItem>
+        <RingItem></RingItem>
+        <RingItem></RingItem>
+        <RingItem></RingItem>
       </Ring>
     </Container>
   );
@@ -32,18 +31,6 @@ const Ring = styled.div`
   position: relative;
   width: 80px;
   height: 80px;
-  div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
-    border: 8px solid #ef7f4d;
-    border-radius: 50%;
-    animation: ${RingAnimation} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #ef7f4d transparent transparent transparent;
-  }
   div:nth-child(1) {
     animation-delay: -0.45s;
   }
@@ -53,4 +40,17 @@ const Ring = styled.div`
   div:nth-child(3) {
     animation-delay: -0.15s;
   }
+`;
+
+const RingItem = styled.div`
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #bd2222;
+  border-radius: 50%;
+  animation: ${RingAnimation} 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #bd2222 transparent transparent transparent;
 `;

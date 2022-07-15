@@ -3,12 +3,12 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Types from "./pages/Types";
 import Pokemons from "./pages/Pokemons";
-import "./styles/global.css";
-import { ThemeProvider } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import PokemonDetail from "./pages/PokemonDetail";
-import TypeDetail from "./pages/typeDetail";
+import TypeDetail from "./pages/TypeDetail";
 
 const theme = {
+  main: "#f52c2c",
   grass: "rgba(0, 171, 20,0.2)",
   normal: "rgba(153, 146, 145,0.2)",
   fighting: "rgba(143, 0, 14,0.2)",
@@ -30,9 +30,33 @@ const theme = {
   shadow: "rgba(38, 33, 41,0.2)",
 };
 
+const GlobalStyle = createGlobalStyle`
+  body,
+  form,
+  fieldset,
+  ol,
+  ul,
+  li,
+  h1,ó
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+  }
+  body {
+    overflow-y: scroll;
+  }
+`;
+
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
+      <GlobalStyle />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/types">

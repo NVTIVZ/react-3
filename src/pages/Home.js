@@ -8,14 +8,14 @@ const Home = () => {
     <Layout>
       <Container>
         <PlayersSide>
-          <Link to={"/players"}>
-            <Mask>Go to players</Mask>
-          </Link>
+          <StyledLink to={"/pokemons"}>
+            <Mask>Go to Pokemons</Mask>
+          </StyledLink>
         </PlayersSide>
         <TeamsSide>
-          <Link to={"/teams"}>
-            <Mask>Go to Teams</Mask>
-          </Link>
+          <StyledLink to={"/types"}>
+            <Mask>Go to Types</Mask>
+          </StyledLink>
         </TeamsSide>
       </Container>
     </Layout>
@@ -31,22 +31,20 @@ const Container = styled.div`
 `;
 
 const PlayersSide = styled.div`
-  background-image: url("/harden.jpg");
+  background-image: url("/original.jpg");
   background-repeat: no-repeat;
   background-position: center;
   width: 600px;
-  a {
-    text-decoration: none;
-  }
 `;
 const TeamsSide = styled.div`
   width: 600px;
-  background-image: url("/team.jpg");
+  background-image: url("/types.png");
   background-repeat: no-repeat;
   background-position: center;
-  a {
-    text-decoration: none;
-  }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
 `;
 
 const Mask = styled.div`

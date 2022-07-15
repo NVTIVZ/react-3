@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import { map, path } from "ramda";
-import pokemonCall from "../api/qqlCalls/pokemonCall";
+import pokemonCall from "../api/gqlCalls/pokemonCall";
 import DetailsModal from "../components/DetailsModal";
 
 const PokemonDetail = () => {

@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import Button from "./Button";
 
-const ErrorMessage = ({ refresh }) => {
+const ErrorMessage = ({ onRefresh }) => {
   return (
     <Container>
       <Error>Failed to load players</Error>
-      <Button onClick={refresh}>Refresh</Button>
+      <Button onClick={onRefresh}>Refresh</Button>
     </Container>
   );
 };
